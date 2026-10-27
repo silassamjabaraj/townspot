@@ -1,0 +1,6 @@
+{
+  "name": "TownSpot",
+  "description": "Explore and discover local businesses, cafes, shops, services, reviews, and deals in your Andaman & Nicobar neighborhood.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

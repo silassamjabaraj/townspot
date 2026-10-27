@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">TownSpot</string>
+    <string name="search_hint">Search businesses, cafes, services…</string>
+    <string name="tab_explore">Explore</string>
+    <string name="tab_categories">Categories</string>
+    <string name="tab_saved">Saved</string>
+    <string name="tab_add">Add Business</string>
+    <string name="action_call">Call</string>
+    <string name="action_directions">Directions</string>
+    <string name="action_website">Website</string>
+    <string name="action_share">Share</string>
+
+    <!-- Google Services and Firebase identifiers to prevent missing google_app_id runtime errors -->
+    <string name="google_app_id" translatable="false">1:191127901152:android:ab99f9ea20e0406f</string>
+    <string name="gcm_defaultSenderId" translatable="false">191127901152</string>
+    <string name="default_web_client_id" translatable="false">191127901152-townspot.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://townspot-default-rtdb.firebaseio.com</string>
+    <string name="google_api_key" translatable="false">AIzaSyTownSpotLocalKeyForApplet123456</string>
+    <string name="google_storage_bucket" translatable="false">townspot-app.appspot.com</string>
+    <string name="project_id" translatable="false">townspot-app</string>
+</resources>
