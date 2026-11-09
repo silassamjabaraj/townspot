@@ -18,14 +18,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ViewList
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentCut
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Flight
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.LocalCafe
 import androidx.compose.material.icons.filled.LocalHospital
 import androidx.compose.material.icons.filled.MoreHoriz
@@ -73,6 +79,7 @@ import com.example.data.model.BusinessEntity
 import com.example.data.model.UserEntity
 import com.example.ui.components.BusinessCard
 import com.example.ui.components.ResidentAdSenseSection
+import com.example.ui.components.VenueGridCard
 import com.example.ui.theme.BuListioCoral
 import com.example.ui.theme.MomoTrustDisplayFontFamily
 import com.example.ui.theme.NunitoFontFamily
@@ -121,6 +128,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     var showMenu by remember { mutableStateOf(false) }
+    var isGridView by remember { mutableStateOf(true) }
 
     // Categories matching directory listings
     val listingCategories = remember(availableCategories) {
@@ -164,14 +172,17 @@ fun HomeScreen(
         }
     }
 
-    LazyColumn(
+    LazyVerticalGrid(
+        columns = GridCells.Adaptive(minSize = 160.dp),
         modifier = modifier
             .fillMaxSize()
             .background(Color.White),
-        contentPadding = PaddingValues(bottom = 100.dp)
+        contentPadding = PaddingValues(bottom = 100.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         // 1. BuListio Brand Header matching Screen 1 in IMG_0109.png
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Surface(
                 color = Color.White,
                 modifier = Modifier.fillMaxWidth()
@@ -346,7 +357,7 @@ fun HomeScreen(
         }
 
         // 2. Search Bar matching Screen 1 in IMG_0109.png
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -403,7 +414,7 @@ fun HomeScreen(
         }
 
         // 3. Listing Categories Section matching Screen 1 in IMG_0109.png
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -498,7 +509,7 @@ fun HomeScreen(
         }
 
         // 5. Popular Listing Items Promo Card matching Screen 1 in IMG_0109.png
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -590,7 +601,7 @@ fun HomeScreen(
         }
 
         // Resident Section Google AdSense Sponsored Partner Banner
-        item {
+        item(span = { GridItemSpan(maxLineSpan) }) {
             ResidentAdSenseSection(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp),
                 customTitle = "Resident Community Sponsor • Google AdSense",
@@ -598,43 +609,7 @@ fun HomeScreen(
             )
         }
 
-        // 6. Featured Listings Section matching Screen 1 in IMG_0109.png
-        item {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 18.dp, vertical = 6.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Featured Listings",
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 17.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable { onOpenNeighborhoods() }
-                        .testTag("featured_see_all")
-                ) {
-                    Text(
-                        text = "See All >",
-                        style = MaterialTheme.typography.labelMedium.copy(
-                            fontWeight = FontWeight.Bold,
-                            color = BuListioCoral,
-                            fontSize = 13.sp
-                        )
-                    )
-                }
-            }
-        }
-
-        // 7. Featured Horizontal Listing Cards
+        // 6. Featured Venues Section Header with Grid / List View Toggle
         val displayList = businesses.filter { b ->
             val matchesCategory = if (filterState.selectedCategory == "All") true
             else b.category.equals(filterState.selectedCategory, ignoreCase = true)
@@ -647,8 +622,94 @@ fun HomeScreen(
             matchesCategory && matchesSearch
         }
 
+        item(span = { GridItemSpan(maxLineSpan) }) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Local Venues (${displayList.size})",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 17.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Text(
+                        text = "Top-rated spots in Andaman Islands",
+                        style = MaterialTheme.typography.bodySmall.copy(
+                            fontSize = 11.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    // Grid View Toggle Button
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (isGridView) BuListioCoral.copy(alpha = 0.12f) else Color.Transparent,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { isGridView = true }
+                            .testTag("toggle_grid_view")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.GridView,
+                            contentDescription = "Grid View",
+                            tint = if (isGridView) BuListioCoral else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .size(20.dp)
+                        )
+                    }
+
+                    // List View Toggle Button
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = if (!isGridView) BuListioCoral.copy(alpha = 0.12f) else Color.Transparent,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable { isGridView = false }
+                            .testTag("toggle_list_view")
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ViewList,
+                            contentDescription = "List View",
+                            tint = if (!isGridView) BuListioCoral else MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier
+                                .padding(6.dp)
+                                .size(20.dp)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Text(
+                        text = "See All >",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = BuListioCoral,
+                            fontSize = 13.sp
+                        ),
+                        modifier = Modifier
+                            .clickable { onOpenNeighborhoods() }
+                            .testTag("featured_see_all")
+                    )
+                }
+            }
+        }
+
+        // 7. Venue Cards in LazyVerticalGrid
         if (displayList.isEmpty()) {
-            item {
+            item(span = { GridItemSpan(maxLineSpan) }) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -656,15 +717,25 @@ fun HomeScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No listings match your search.",
+                        text = "No venues match your search.",
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
-        } else {
+        } else if (isGridView) {
             items(displayList, key = { it.id }) { business ->
-                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 5.dp)) {
+                Box(modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)) {
+                    VenueGridCard(
+                        business = business,
+                        onClick = { onSelectBusiness(business.id) },
+                        onToggleSaved = { onToggleSaved(business.id, !business.isSaved) }
+                    )
+                }
+            }
+        } else {
+            items(displayList, key = { it.id }, span = { GridItemSpan(maxLineSpan) }) { business ->
+                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)) {
                     BusinessCard(
                         business = business,
                         onClick = { onSelectBusiness(business.id) },

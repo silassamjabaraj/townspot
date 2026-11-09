@@ -1,0 +1,2 @@
+# IAB Tech Lab Authorized Digital Sellers (app-ads.txt) for TownSpot
+google.com, pub-5128857424749309, DIRECT, f08c47fec0942fa0

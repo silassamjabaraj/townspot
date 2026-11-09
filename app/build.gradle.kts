@@ -16,8 +16,8 @@ android {
     applicationId = "com.aistudio.townspot.kxmpzq"
     minSdk = 24
     targetSdk = 36
-    versionCode = 3
-    versionName = "3.0"
+    versionCode = 5
+    versionName = "5.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -45,6 +45,9 @@ android {
       isShrinkResources = true
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
       signingConfig = signingConfigs.getByName("release")
+      ndk {
+        debugSymbolLevel = "SYMBOL_TABLE"
+      }
     }
     debug { signingConfig = signingConfigs.getByName("debugConfig") }
   }
